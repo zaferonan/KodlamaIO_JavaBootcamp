@@ -3,7 +3,7 @@ package stringsDemo;
 public class Main {
 
 	public static void main(String[] args) {
-		String mesaj="Bugun hava cok guzel.";
+		String mesaj="Bugun hava cok guzel.   ";
 		System.out.println(mesaj);
 		
 		System.out.println("Eleman Sayisi : "+mesaj.length());
@@ -18,6 +18,18 @@ public class Main {
 		
 		System.out.println(mesaj.indexOf("av"));
 		System.out.println(mesaj.lastIndexOf("e"));
+		
+		String yeniMesaj = mesaj.replace(' ', '-');
+		System.out.println(yeniMesaj);
+		System.out.println(mesaj.substring(2, 5));
+
+		for (String kelime : mesaj.split(" ")) {
+			System.out.println(kelime);
+		}
+
+		System.out.println(mesaj.toLowerCase());
+		System.out.println(mesaj.toUpperCase());
+		System.out.println(mesaj.trim());
 	
 	}
 
