@@ -14,6 +14,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class Language {
+	
 	private int languageId;
 	private String languageName;
 

@@ -3,6 +3,7 @@ package kodlama.io.Devs.dataAccess.concretes;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -49,12 +50,8 @@ public class InMemoryLanguageRepository implements LanguageRepository{
 
 	@Override
 	public Language getById(int languageId) {
-		for (Language language : languages) {
-			if(language.getLanguageId()==languageId) {				
-				return language;
-			}
-		}
-		return null;
+		Optional<Language> language= languages.stream().filter(a->a.getLanguageId()==languageId).findAny();
+	    return language.orElse(null);
 	}
 
 }
