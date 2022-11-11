@@ -56,7 +56,7 @@ public class LanguageController {
 	
 	
 	@PostMapping("/update")
-	public void update(@RequestBody UpdateLanguageRequest updateLanguageRequest) {		
+	public void update(@RequestBody UpdateLanguageRequest updateLanguageRequest) throws Exception {		
 		languageService.update(updateLanguageRequest);
 	}
 	

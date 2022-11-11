@@ -2,11 +2,8 @@ package kodlama.io.Devs.business.concretes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import kodlama.io.Devs.business.abstracts.LanguageService;
@@ -30,7 +27,7 @@ public class LanguageManager implements LanguageService {
 	@Override
 	public List<GetLanguageResponse> getAll() {
 
-		List<GetLanguageResponse> responses = new ArrayList();
+		List<GetLanguageResponse> responses = new ArrayList<GetLanguageResponse>();
 		for (Language language : languageRepository.findAll()) {
 			GetLanguageResponse response = new GetLanguageResponse();
 			response.setLanguageId(language.getLanguageId());
@@ -46,17 +43,10 @@ public class LanguageManager implements LanguageService {
 		Language language = new Language();
 		language.setLanguageName(createLanguageRequest.getLanguageName());
 
-		isExistByName(language.getLanguageName());
 		isNameEmpty(language.getLanguageName());
+		isExistByName(language.getLanguageName());
 
 		languageRepository.save(language);
-
-	}
-
-	private void isNameEmpty(String languageName) throws Exception {
-		if (languageName.equals("")) {
-			throw new RuntimeException("Language name can not be empty.");
-		}
 
 	}
 
@@ -67,43 +57,32 @@ public class LanguageManager implements LanguageService {
 	}
 
 	@Override
-	public void update(UpdateLanguageRequest updateLanguageRequest) {
+	public void update(UpdateLanguageRequest updateLanguageRequest) throws Exception {
+
+		isExistById(updateLanguageRequest.getLanguageId());
+		isNameEmpty(updateLanguageRequest.getLanguageName());
+		isExistByName(updateLanguageRequest.getLanguageName());
+
 		Language language = languageRepository.findByLanguageId(updateLanguageRequest.getLanguageId());
-		if (language != null) {
-			if (!updateLanguageRequest.getLanguageName().equals("")) {
-
-				language.setLanguageName(updateLanguageRequest.getLanguageName());
-				languageRepository.save(language);
-			} else
-				throw new RuntimeException("Language name can not be null.");
-
-		} else {
-			throw new RuntimeException("Language name can not be null.");
-		}
+		language.setLanguageName(updateLanguageRequest.getLanguageName());
+		
+		languageRepository.save(language);
 
 	}
 
 	@Override
 	public GetLanguageResponse getById(int languageId) throws Exception {
 		isExistById(languageId);
-		
+
 		Language language = languageRepository.findByLanguageId(languageId);
 
 		return new GetLanguageResponse(languageId, language.getLanguageName());
 
 	}
 
-	private boolean isExist(Language language) {
-		if (languageRepository.findAll().stream().filter(a -> a.equals(language)).findAny().orElse(null) != null) {
-			return true;
-		}
-
-		return false;
-
-	}
 
 	private void isExistByName(String languageName) throws Exception {
-		if (languageRepository.findAll().stream().filter(a -> a.getLanguageName().equals(languageName)).findAny()
+		if (languageRepository.findAll().stream().filter(a -> a.getLanguageName().equalsIgnoreCase(languageName)).findAny()
 				.orElse(null) != null) {
 
 			throw new RuntimeException(languageName + " is already exist.");
@@ -115,6 +94,13 @@ public class LanguageManager implements LanguageService {
 
 		if (languageRepository.findByLanguageId(languageId) == null) {
 			throw new RuntimeException("There is no " + languageId + " in database.");
+		}
+
+	}
+
+	private void isNameEmpty(String languageName) throws Exception {
+		if (languageName.equals("")) {
+			throw new RuntimeException("Language name can not be empty.");
 		}
 
 	}

@@ -26,5 +26,5 @@ public class UpdateSubTechnologyRequest {
 	@NotBlank
 	@NotNull
 	@NotEmpty
-	private int language_id;
+	private int languageId;
 }

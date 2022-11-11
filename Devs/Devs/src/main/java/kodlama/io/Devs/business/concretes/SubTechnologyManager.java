@@ -69,14 +69,15 @@ public class SubTechnologyManager implements SubTechnologyService {
 
 	@Override
 	public void update(UpdateSubTechnologyRequest updateSubTechnologyRequest) {
+		
+		isExistById(updateSubTechnologyRequest.getSubTechnologyId());
+		isNameEmpty(updateSubTechnologyRequest.getSubTechnologyName());
+		isExistedLanguage(updateSubTechnologyRequest.getLanguageId());
+		
 		SubTechnology subTechnology = new SubTechnology();
 		subTechnology.setSubTechnologyId(updateSubTechnologyRequest.getSubTechnologyId());
 		subTechnology.setSubTechnologyName(updateSubTechnologyRequest.getSubTechnologyName());
-		subTechnology.setLanguage(languageRepository.findByLanguageId(updateSubTechnologyRequest.getLanguage_id()));
-
-		isExistById(subTechnology.getSubTechnologyId());
-		isNameEmpty(subTechnology.getSubTechnologyName());
-		isExistedLanguage(subTechnology.getLanguage().getLanguageId());
+		subTechnology.setLanguage(languageRepository.findByLanguageId(updateSubTechnologyRequest.getLanguageId()));
 
 		subTechnologyRepository.save(subTechnology);
 
@@ -99,15 +100,13 @@ public class SubTechnologyManager implements SubTechnologyService {
 
 	private void isExistedLanguage(@NotNull int language_id) throws RuntimeException {
 		if (languageRepository.findByLanguageId(language_id) == null) {
-
 			throw new RuntimeException("Language is not exist.");
 		}
 
 	}
 
-	private void isExistByName(String subTechnologyName) throws RuntimeException {
-	
-		if (subTechnologyRepository.findAll().stream().filter(a -> a.getSubTechnologyName().equals(subTechnologyName)).findAny().orElse(null) != null) {
+	private void isExistByName(String subTechnologyName) throws RuntimeException {	
+		if (subTechnologyRepository.findAll().stream().filter(a -> a.getSubTechnologyName().equalsIgnoreCase(subTechnologyName)).findAny().orElse(null) != null) {
 			
 			throw new RuntimeException(subTechnologyName + " is already exist");
 		}
